@@ -1,0 +1,6 @@
+{
+  "name": "Cotizaciones RBC",
+  "description": "Sistema profesional de generación y emisión de cotizaciones con identidad oficial de RBCOMUNICACIONES",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

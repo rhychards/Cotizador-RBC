@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    @apply bg-slate-100 text-slate-800 antialiased;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  }
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 8mm 10mm;
+  }
+
+  body {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    font-size: 11pt;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Hide app chrome, headers, buttons, footers */
+  header,
+  nav,
+  footer,
+  .print\:hidden,
+  #app-top-header,
+  #app-action-toolbar,
+  #quotation-form-card,
+  #history-modal-backdrop,
+  #signature-modal-backdrop,
+  #company-settings-backdrop,
+  #firmaec-modal-backdrop,
+  #export-pdf-modal-backdrop {
+    display: none !important;
+  }
+
+  /* Force background colors and exact borders */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  #quotation-print-document {
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 0.75rem !important;
+    box-shadow: none !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    display: block !important;
+    overflow: visible !important;
+  }
+
+  /* Prevent modules from being split across page breaks */
+  [data-page-break-avoid],
+  .break-inside-avoid,
+  tr,
+  td,
+  th {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+}
