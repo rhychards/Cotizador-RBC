@@ -72,22 +72,19 @@ function App() {
 
   // Si SÍ hay un usuario logueado, se desbloquea el aplicativo completo
   return (
+     return (
     <>
       <div style={{ position: 'absolute', top: '15px', right: '15px', fontFamily: 'sans-serif' }}>
         <button onClick={() => auth.signOut()} style={{ padding: '8px 12px', backgroundColor: '#6b7280', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '13px' }}>
-          Cerrar Sesión ({user.email})
+          Cerrar Sesión ({user?.email})
         </button>
       </div>
 
-      {/* ==================================================== */}
-      {/* ABRE TU COMPONENTE ORIGINAL AQUÍ (TU COTIZADOR ACTUAL) */}
-      {/* ==================================================== */}
-      <div style={{ padding: '20px' }}>
+      <div style={{ padding: '20px', fontFamily: 'sans-serif', color: '#fff' }}>
         <h2>Bienvenido al Cotizador RBC</h2>
         <p>El sistema se ha autenticado con éxito.</p>
-        {/* Aquí puedes reincorporar los inputs o componentes interactivos de IA que tenías previamente en tu App.tsx */}
       </div>
-    </**>
+    </>
   );
 }
 
