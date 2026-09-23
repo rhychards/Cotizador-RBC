@@ -2,9 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { auth } from './firebase';
 import { onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
 
-// !!! NOTA: Si tu cotizador original tenía un nombre de componente diferente, 
-// simplemente mantén tu lógica abajo donde dice "AQUÍ VA TU COTIZADOR ACTUAL".
-
 function App() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -43,7 +40,7 @@ function App() {
   // Si NO hay usuario logueado, se muestra estrictamente la pantalla de acceso
   if (!user) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', justifyItems: 'center', alignItems: 'center', minHeight: '100vh', backgroundColor: '#f3f4f6', fontFamily: 'sans-serif', paddingTop: '100px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh', backgroundColor: '#f3f4f6', fontFamily: 'sans-serif', paddingTop: '100px' }}>
         <div style={{ backgroundColor: '#ffffff', padding: '30px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', width: '100%', maxWidth: '360px', boxSizing: 'border-box' }}>
           <h2 style={{ textAlign: 'center', margin: '0 0 20px 0', color: '#1f2937' }}>Iniciar Sesión</h2>
           <p style={{ textAlign: 'center', color: '#6b7280', fontSize: '14px', marginBottom: '20px' }}>Cotizador Tecnológico RBC</p>
@@ -72,7 +69,6 @@ function App() {
 
   // Si SÍ hay un usuario logueado, se desbloquea el aplicativo completo
   return (
-     return (
     <>
       <div style={{ position: 'absolute', top: '15px', right: '15px', fontFamily: 'sans-serif' }}>
         <button onClick={() => auth.signOut()} style={{ padding: '8px 12px', backgroundColor: '#6b7280', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '13px' }}>
@@ -80,7 +76,7 @@ function App() {
         </button>
       </div>
 
-      <div style={{ padding: '20px', fontFamily: 'sans-serif', color: '#fff' }}>
+      <div style={{ padding: '20px', fontFamily: 'sans-serif', color: '#333' }}>
         <h2>Bienvenido al Cotizador RBC</h2>
         <p>El sistema se ha autenticado con éxito.</p>
       </div>
