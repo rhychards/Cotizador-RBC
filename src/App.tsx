@@ -4,6 +4,9 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { auth } from './firebase';
+import { onAuthStateChanged, signOut, User } from 'firebase/auth';
+import { AuthModal } from './components/AuthModal';
 import { 
   Quotation, 
   CompanyInfo, 
@@ -30,7 +33,7 @@ import { ExportPdfModal } from './components/ExportPdfModal';
 import { UploadSignedQuotationModal } from './components/UploadSignedQuotationModal';
 import { GoogleDriveArchiveModal } from './components/GoogleDriveArchiveModal';
 import { downloadQuotationPdf } from './utils/pdfExport';
-import { archiveQuotationToDrive, DRIVE_FOLDER_NAME, clearArchivedRecords } from './services/googleDriveService';
+import { archiveQuotationToDrive, clearArchivedRecords } from './services/googleDriveService';
 import { 
   Plus, 
   Save, 
@@ -43,11 +46,9 @@ import {
   Edit3, 
   Columns, 
   Check, 
-  Sparkles,
-  Share2,
   UploadCloud,
-  HardDrive,
-  RotateCcw
+  RotateCcw,
+  LogOut
 } from 'lucide-react';
 
 const STORAGE_QUOTATIONS_KEY = 'rbc_quotations_list_v1';
@@ -139,6 +140,18 @@ const createCleanQuotation = (code: string = 'COT-RBC-2026-001'): Quotation => {
 };
 
 export default function App() {
+  // Authentication state
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [authChecked, setAuthChecked] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user);
+      setAuthChecked(true);
+    });
+    return () => unsubscribe();
+  }, []);
+
   // Company Profile state
   const [company, setCompany] = useState<CompanyInfo>(() => {
     const saved = localStorage.getItem(STORAGE_COMPANY_KEY);
@@ -166,7 +179,6 @@ export default function App() {
 
   // Quotations list state - strictly stores only non-empty saved quotations
   const [quotations, setQuotations] = useState<Quotation[]>(() => {
-    // If system reset flag is not set, perform immediate cleanup of past history
     const isResetDone = localStorage.getItem(STORAGE_SYSTEM_RESET_FLAG);
     if (!isResetDone) {
       try {
@@ -183,7 +195,6 @@ export default function App() {
       try {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          // Exclude any empty quotation (must have at least one product or service)
           return parsed
             .filter((q: Quotation) => q && Array.isArray(q.items) && q.items.length > 0)
             .map((q: Quotation) => ({
@@ -242,7 +253,7 @@ export default function App() {
   const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  // Sync with localStorage - NEVER save empty quotations
+  // Sync with localStorage
   useEffect(() => {
     const validQuotations = quotations.filter(q => q && Array.isArray(q.items) && q.items.length > 0);
     localStorage.setItem(STORAGE_QUOTATIONS_KEY, JSON.stringify(validQuotations));
@@ -252,7 +263,7 @@ export default function App() {
     localStorage.setItem(STORAGE_COMPANY_KEY, JSON.stringify(company));
   }, [company]);
 
-  // Persist the latest client data so it's loaded by default
+  // Persist the latest client data
   useEffect(() => {
     if (
       activeQuotation.client &&
@@ -271,7 +282,6 @@ export default function App() {
     setTimeout(() => setToastMessage(null), 3000);
   };
 
-  // Create brand new quotation (preloads the latest registered client by default)
   const handleNewQuotation = () => {
     const nextCode = getNextSequenceCode(quotations);
     const today = new Date().toISOString().split('T')[0];
@@ -306,16 +316,15 @@ export default function App() {
         signedAt: '',
         approved: false,
       },
+      bankAccount: DEFAULT_BANK_ACCOUNT,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
 
     setActiveQuotation(newQuote);
-    // Note: Empty quotation is NOT added to quotations history until saved with signed document
     showToast(`Nueva cotización ${nextCode} iniciada.`);
   };
 
-  // Reset system and delete all quotations history
   const handleResetSystem = () => {
     try {
       localStorage.removeItem(STORAGE_QUOTATIONS_KEY);
@@ -330,7 +339,6 @@ export default function App() {
     showToast('¡Sistema reiniciado! Historial vaciado completamente.');
   };
 
-  // Close quotation emission with signed backup in database
   const handleSaveSignedBackup = (signedDoc: SignedDocumentInfo) => {
     if (!activeQuotation.items || activeQuotation.items.length === 0) {
       showToast('No se pueden guardar cotizaciones vacías. Agregue productos o servicios primero.');
@@ -353,7 +361,6 @@ export default function App() {
     showToast(`¡Emisión cerrada! Cotización ${activeQuotation.code} guardada y archivada con firma electrónica en base de datos.`);
   };
 
-  // Save current active quote - Only available when signed quotation is loaded
   const handleSaveActiveQuotation = () => {
     if (!activeQuotation.items || activeQuotation.items.length === 0) {
       showToast('No se pueden guardar cotizaciones vacías. Agregue productos o servicios primero.');
@@ -379,7 +386,6 @@ export default function App() {
     showToast(`Cotización firmada ${updatedQuote.code} guardada correctamente.`);
   };
 
-  // Duplicate quotation
   const handleDuplicateQuotation = (source: Quotation) => {
     const nextCode = getNextSequenceCode(quotations);
     const today = new Date().toISOString().split('T')[0];
@@ -408,7 +414,6 @@ export default function App() {
     showToast(`Cotización duplicada con el código ${nextCode}.`);
   };
 
-  // Delete quote
   const handleDeleteQuotation = (id: string) => {
     const remaining = quotations.filter(q => q.id !== id);
     setQuotations(remaining);
@@ -422,7 +427,6 @@ export default function App() {
     showToast('Cotización eliminada.');
   };
 
-  // Open the detailed export options modal
   const handleOpenExportModal = () => {
     if (activeQuotation.items.length === 0) {
       showToast('Atención: agregue al menos un producto o servicio antes de exportar o imprimir.');
@@ -430,7 +434,6 @@ export default function App() {
     setIsExportModalOpen(true);
   };
 
-  // Direct High-Resolution PDF Download with Auto-Archive in Google Drive
   const handleDirectDownloadPdf = async () => {
     if (activeQuotation.items.length === 0) {
       showToast('No es posible descargar el PDF: debe registrar al menos un producto o servicio.');
@@ -483,7 +486,6 @@ export default function App() {
     }
   };
 
-  // Save issuer signature
   const handleSaveIssuerSignature = (sig: DigitalSignature) => {
     const updated = {
       ...activeQuotation,
@@ -494,7 +496,6 @@ export default function App() {
     showToast('Firma del representante registrada.');
   };
 
-  // Save client signature
   const handleSaveClientSignature = (sig: DigitalSignature) => {
     const updated = {
       ...activeQuotation,
@@ -506,6 +507,21 @@ export default function App() {
     showToast('Firma de aceptación del cliente registrada.');
   };
 
+  // 1. Pantalla de carga mientras se comprueba la sesión
+  if (!authChecked) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center gap-3 text-white">
+        <Loader2 className="w-8 h-8 text-red-500 animate-spin" />
+        <span className="text-xs text-slate-400 font-sans">Verificando acceso...</span>
+      </div>
+    );
+  }
+
+  // 2. Pantalla de inicio de sesión / registro si no hay usuario autenticado
+  if (!currentUser) {
+    return <AuthModal onSuccess={() => {}} />;
+  }
+
   return (
     <div className="min-h-screen bg-slate-100 flex flex-col selection:bg-red-500 selection:text-white">
       {/* Top Application Navigation Header */}
@@ -514,7 +530,7 @@ export default function App() {
         className="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-40 shadow-md print:hidden"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between gap-4">
-          {/* Logo & Title - Preserving original logo colors and shapes without alteration */}
+          {/* Logo & Title */}
           <div className="flex items-center space-x-3">
             <div className="bg-white px-2.5 py-1 rounded-xl shadow-xs border border-slate-700/60 flex items-center">
               <CompanyLogo logoUrl={company.logoUrl} size="md" showSubtitle={false} />
@@ -536,7 +552,7 @@ export default function App() {
               id="new-quote-top-btn"
               type="button"
               onClick={handleNewQuotation}
-              className="inline-flex items-center px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg shadow-sm transition-colors"
+              className="inline-flex items-center px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg shadow-sm transition-colors cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5 mr-1" />
               Nueva
@@ -547,7 +563,7 @@ export default function App() {
               id="history-top-btn"
               type="button"
               onClick={() => setIsHistoryOpen(true)}
-              className="inline-flex items-center px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold rounded-lg border border-slate-700 transition-colors"
+              className="inline-flex items-center px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold rounded-lg border border-slate-700 transition-colors cursor-pointer"
               title="Historial de cotizaciones"
             >
               <History className="w-3.5 h-3.5 mr-1" />
@@ -573,7 +589,7 @@ export default function App() {
               <span className="hidden lg:inline">Reiniciar</span>
             </button>
 
-            {/* 1. Direct PDF Download Button */}
+            {/* Direct PDF Download Button */}
             <button
               id="download-pdf-top-btn"
               type="button"
@@ -603,7 +619,7 @@ export default function App() {
               )}
             </button>
 
-            {/* 2. Subir Cotización Firmada */}
+            {/* Subir Cotización Firmada */}
             <button
               id="upload-signed-top-btn"
               type="button"
@@ -633,7 +649,7 @@ export default function App() {
               <span className="md:hidden">Firmada</span>
             </button>
 
-            {/* 3. Botón Guardar Cotización Firmada - DISPONIBLE UNA VEZ CARGADA LA COTIZACIÓN FIRMADA */}
+            {/* Botón Guardar Cotización Firmada */}
             {activeQuotation.signedDocument?.fileName && (
               <button
                 id="save-signed-quote-top-btn"
@@ -647,7 +663,7 @@ export default function App() {
               </button>
             )}
 
-            {/* 3. Print / Export Options Modal */}
+            {/* Print / Export Options Modal */}
             <button
               id="print-pdf-top-btn"
               type="button"
@@ -673,15 +689,27 @@ export default function App() {
               id="settings-top-btn"
               type="button"
               onClick={() => setIsSettingsOpen(true)}
-              className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+              className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
               title="Datos de la empresa emisora"
             >
               <Settings className="w-4 h-4" />
             </button>
+
+            {/* Logout Button */}
+            <button
+              id="logout-top-btn"
+              type="button"
+              onClick={() => signOut(auth)}
+              className="inline-flex items-center px-2.5 py-1.5 bg-slate-800 hover:bg-red-950/80 text-slate-300 hover:text-red-300 text-xs font-semibold rounded-lg border border-slate-700 hover:border-red-700 transition-colors cursor-pointer"
+              title={`Cerrar sesión (${currentUser.email})`}
+            >
+              <LogOut className="w-3.5 h-3.5 mr-1" />
+              <span className="hidden md:inline">Salir</span>
+            </button>
           </div>
         </div>
 
-        {/* Secondary Subbar: Active Document Code & View Switcher */}
+        {/* Secondary Subbar: Active Document Code, User & View Switcher */}
         <div id="app-action-toolbar" className="bg-slate-950/60 border-t border-slate-800/80 px-4 sm:px-6 py-2">
           <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 text-xs">
             <div className="flex items-center space-x-2">
@@ -693,6 +721,10 @@ export default function App() {
               <span className="hidden sm:inline text-slate-300 font-medium truncate max-w-xs">
                 {activeQuotation.client.companyName || activeQuotation.client.contactName || 'Sin cliente asignado'}
               </span>
+              <span className="hidden lg:inline text-slate-500">•</span>
+              <span className="hidden lg:inline text-slate-400 text-[11px]">
+                Sesión: <span className="text-slate-300">{currentUser.email}</span>
+              </span>
             </div>
 
             {/* View Mode Switcher */}
@@ -700,7 +732,7 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => setViewMode('form')}
-                className={`px-2.5 py-1 rounded text-[11px] font-semibold flex items-center gap-1 transition-colors ${
+                className={`px-2.5 py-1 rounded text-[11px] font-semibold flex items-center gap-1 transition-colors cursor-pointer ${
                   viewMode === 'form' ? 'bg-red-600 text-white' : 'text-slate-400 hover:text-white'
                 }`}
                 title="Solo formulario de edición"
@@ -711,7 +743,7 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => setViewMode('split')}
-                className={`hidden lg:flex px-2.5 py-1 rounded text-[11px] font-semibold items-center gap-1 transition-colors ${
+                className={`hidden lg:flex px-2.5 py-1 rounded text-[11px] font-semibold items-center gap-1 transition-colors cursor-pointer ${
                   viewMode === 'split' ? 'bg-red-600 text-white' : 'text-slate-400 hover:text-white'
                 }`}
                 title="Vista dividida: formulario y documento"
@@ -722,7 +754,7 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => setViewMode('preview')}
-                className={`px-2.5 py-1 rounded text-[11px] font-semibold flex items-center gap-1 transition-colors ${
+                className={`px-2.5 py-1 rounded text-[11px] font-semibold flex items-center gap-1 transition-colors cursor-pointer ${
                   viewMode === 'preview' ? 'bg-red-600 text-white' : 'text-slate-400 hover:text-white'
                 }`}
                 title="Solo vista previa del documento"
@@ -737,10 +769,8 @@ export default function App() {
 
       {/* Main Workspace Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 print:p-0 print:max-w-none">
-        {/* Layout according to viewMode */}
         {viewMode === 'split' && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {/* Left: Interactive Form */}
             <div className="lg:col-span-6 xl:col-span-5 print:hidden">
               <QuotationForm
                 quotation={activeQuotation}
@@ -753,8 +783,6 @@ export default function App() {
                 isDownloadingPdf={isDownloadingPdf}
               />
             </div>
-
-            {/* Right: Real-time Live Document */}
             <div className="lg:col-span-6 xl:col-span-7">
               <div className="sticky top-24">
                 <QuotationDocument
@@ -784,7 +812,6 @@ export default function App() {
               onDownloadPdf={handleDirectDownloadPdf}
               isDownloadingPdf={isDownloadingPdf}
             />
-            {/* Always keep quotation-print-document in DOM for PDF export and print */}
             <div 
               className="fixed -left-[99999px] top-0 w-[794px] opacity-0 pointer-events-none print:static print:left-auto print:opacity-100 print:pointer-events-auto"
               aria-hidden="true"
