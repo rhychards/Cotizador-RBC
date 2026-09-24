@@ -2,8 +2,8 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBwIBCPxhsU1u525KilrngF3_kKRKnhUQ",
-  authDomain: "://firebaseapp.com",
+  apiKey: "AIzaSyBmuIBCPwhsU1u525KiirngFS_kKRknhUQ",
+  authDomain: "ai-studio-applet-webapp-2cdae.firebaseapp.com",
   projectId: "ai-studio-applet-webapp-2cdae",
   storageBucket: "ai-studio-applet-webapp-2cdae.firebasestorage.app",
   messagingSenderId: "307498160667",
