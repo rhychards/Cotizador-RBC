@@ -78,67 +78,64 @@ export const AuthModal: React.FC<AuthModalProps> = ({ onSuccess }) => {
 
   return (
     <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-slate-950 p-4">
-      {/* 1. Mosaico Collage Temático */}
-      <div className="absolute inset-0 grid grid-cols-1 md:grid-cols-3 opacity-30 select-none pointer-events-none scale-105">
-        {/* Panel 1: Streaming Audiovisual Corporativo */}
-        <div className="relative h-full overflow-hidden border-r border-slate-800/40">
+      {/* 1. Mosaico Collage Temático: Streaming, Seguridad Electrónica y Radiofrecuencia */}
+      <div className="absolute inset-0 grid grid-cols-1 md:grid-cols-3 opacity-80 select-none pointer-events-none">
+        {/* Streaming Corporativo de Audio y Video */}
+        <div className="relative h-full overflow-hidden border-r border-slate-700/60">
           <img 
             src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=1200&auto=format&fit=crop" 
-            alt="Streaming Audio y Video" 
-            className="w-full h-full object-cover grayscale contrast-125 hover:scale-105 transition-transform duration-1000"
+            alt="Streaming Corporativo Audiovisual" 
+            className="w-full h-full object-cover contrast-115 brightness-90"
           />
-          <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-red-950/60 via-transparent to-slate-950" />
+          <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-red-950/40 via-transparent to-slate-900/30" />
         </div>
 
-        {/* Panel 2: Seguridad Electrónica y Monitoreo */}
-        <div className="relative h-full overflow-hidden border-r border-slate-800/40">
+        {/* Seguridad Electrónica y CCTV */}
+        <div className="relative h-full overflow-hidden border-r border-slate-700/60">
           <img 
             src="https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=1200&auto=format&fit=crop" 
             alt="Seguridad Electrónica" 
-            className="w-full h-full object-cover grayscale contrast-125 hover:scale-105 transition-transform duration-1000"
+            className="w-full h-full object-cover contrast-115 brightness-90"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-950/40 to-slate-950" />
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-900/30 via-transparent to-slate-950/50" />
         </div>
 
-        {/* Panel 3: Telecomunicaciones y Radiofrecuencia */}
+        {/* Radiofrecuencia y Telecomunicaciones */}
         <div className="relative h-full overflow-hidden">
           <img 
             src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?q=80&w=1200&auto=format&fit=crop" 
             alt="Radiofrecuencia y Telecomunicaciones" 
-            className="w-full h-full object-cover grayscale contrast-125 hover:scale-105 transition-transform duration-1000"
+            className="w-full h-full object-cover contrast-115 brightness-90"
           />
-          <div className="absolute inset-0 bg-gradient-to-b md:bg-gradient-to-l from-cyan-950/60 via-transparent to-slate-950" />
+          <div className="absolute inset-0 bg-gradient-to-b md:bg-gradient-to-l from-cyan-950/40 via-transparent to-slate-900/30" />
         </div>
       </div>
 
-      {/* 2. Capas de Desvanecimiento y Trama Tecnológica */}
-      <div 
-        className="absolute inset-0 bg-[radial-gradient(#334155_1px,transparent_1px)] [background-size:24px_24px] opacity-25 pointer-events-none" 
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-slate-950 pointer-events-none" />
-      <div className="absolute -top-32 -left-32 w-96 h-96 bg-red-600/15 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-cyan-600/15 rounded-full blur-3xl pointer-events-none" />
+      {/* 2. Filtro de balance suave para dar contraste sin tapar el collage */}
+      <div className="absolute inset-0 bg-slate-950/40 pointer-events-none" />
+      <div className="absolute -top-32 -left-32 w-96 h-96 bg-red-600/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-cyan-600/20 rounded-full blur-3xl pointer-events-none" />
 
-      {/* 3. Indicadores de Especialidad Técnica (Encabezado superior del fondo) */}
-      <div className="absolute top-6 left-0 right-0 flex justify-center items-center gap-6 text-[11px] font-semibold uppercase tracking-widest text-slate-400/80 select-none z-10 px-4 text-center">
-        <span className="flex items-center gap-1.5 hover:text-red-400 transition-colors">
+      {/* 3. Etiquetas de especialidad técnica */}
+      <div className="absolute top-6 left-0 right-0 flex justify-center items-center gap-3 sm:gap-6 text-[11px] font-bold uppercase tracking-wider text-white select-none z-10 px-4 text-center">
+        <span className="flex items-center gap-1.5 bg-slate-900/85 backdrop-blur-md px-3 py-1 rounded-full border border-slate-700 shadow-md">
           <Video className="w-3.5 h-3.5 text-red-500" /> Streaming Audio & Video
         </span>
-        <span className="hidden sm:inline text-slate-700">•</span>
-        <span className="flex items-center gap-1.5 hover:text-emerald-400 transition-colors">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" /> Seguridad Electrónica
+        <span className="hidden sm:inline text-slate-500">•</span>
+        <span className="flex items-center gap-1.5 bg-slate-900/85 backdrop-blur-md px-3 py-1 rounded-full border border-slate-700 shadow-md">
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> Seguridad Electrónica
         </span>
-        <span className="hidden sm:inline text-slate-700">•</span>
-        <span className="flex items-center gap-1.5 hover:text-cyan-400 transition-colors">
-          <Radio className="w-3.5 h-3.5 text-cyan-500" /> Radiofrecuencia
+        <span className="hidden sm:inline text-slate-500">•</span>
+        <span className="flex items-center gap-1.5 bg-slate-900/85 backdrop-blur-md px-3 py-1 rounded-full border border-slate-700 shadow-md">
+          <Radio className="w-3.5 h-3.5 text-cyan-400" /> Radiofrecuencia
         </span>
       </div>
 
       {/* 4. Tarjeta Principal de Autenticación */}
-      <div className="relative z-20 w-full max-w-md bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-700/50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        {/* Cabecera de la tarjeta */}
+      <div className="relative z-20 w-full max-w-md bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-700/60 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        {/* Cabecera */}
         <div className="bg-slate-900 p-6 text-center text-white border-b border-slate-800 relative">
-          <div className="absolute top-3 right-3 flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-950/60 border border-emerald-800/80 px-2 py-0.5 rounded-full">
+          <div className="absolute top-3 right-3 flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-950/80 border border-emerald-800/80 px-2 py-0.5 rounded-full">
             <Activity className="w-2.5 h-2.5 animate-pulse" /> Servidor Activo
           </div>
           <div className="mx-auto w-12 h-12 rounded-xl bg-red-600/20 text-red-500 flex items-center justify-center mb-3 shadow-inner">
@@ -251,8 +248,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ onSuccess }) => {
         </form>
       </div>
 
-      {/* Pie inferior con sello tecnológico */}
-      <div className="absolute bottom-4 text-center text-[10px] text-slate-500 select-none z-10">
+      {/* Pie de pantalla */}
+      <div className="absolute bottom-4 text-center text-[10px] text-white/90 font-medium drop-shadow-md select-none z-10">
         RB Comunicaciones • Infraestructura Tecnológica & Soluciones Especializadas
       </div>
     </div>
