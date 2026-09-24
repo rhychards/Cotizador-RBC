@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { auth } from './firebase';
-import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { onAuthStateChanged, signInWithRedirect, GoogleAuthProvider } from 'firebase/auth';
 
 function App() {
   const [user, setUser] = useState<any>(null);
@@ -19,9 +19,10 @@ function App() {
     setError('');
     const provider = new GoogleAuthProvider();
     try {
-      await signInWithPopup(auth, provider);
+      // Usamos redirección nativa en lugar de ventanas emergentes molestas
+      await signInWithRedirect(auth, provider);
     } catch (err: any) {
-      setError('Error al autenticar con Google. Inténtalo de nuevo.');
+      setError('Error al conectar con Google. Inténtalo de nuevo.');
     }
   };
 
@@ -37,7 +38,7 @@ function App() {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', backgroundColor: '#f3f4f6', fontFamily: 'sans-serif' }}>
         <div style={{ backgroundColor: '#ffffff', padding: '40px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', width: '100%', maxWidth: '360px', boxSizing: 'border-box', textAlign: 'center' }}>
-          <h2 style={{ margin: '0 0 10px 0', color: '#1f2937' }}>Acceso Protegido</h2>
+          <h2 style={{ margin: '0 0 10px 0', color: '#1f2937' }}>Acceso Autorizado</h2>
           <p style={{ color: '#6b7280', fontSize: '14px', marginBottom: '30px' }}>Cotizador Tecnológico RBC</p>
           
           {error && <p style={{ color: '#ef4444', fontSize: '13px', marginBottom: '15px' }}>{error}</p>}
@@ -52,7 +53,7 @@ function App() {
               <path fill="#FBBC05" d="M3.86 10.65c-.19-.57-.3-1.17-.3-1.8s.11-1.23.3-1.8V4.75H.95A8.99 8.99 0 0 0 0 9c0 1.54.39 2.98 1.05 4.25l2.81-2.1z"/>
               <path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58C13.46.8 11.43 0 9 0 5.48 0 2.45 2.02.95 4.75l2.91 2.26c.73-2.17 2.75-3.78 5.14-3.78z"/>
             </svg>
-            Iniciar Sesión con Google
+            Ingresar con Google
           </button>
         </div>
       </div>
@@ -69,7 +70,7 @@ function App() {
 
       <div style={{ padding: '20px', fontFamily: 'sans-serif', color: '#333' }}>
         <h2>Bienvenido al Cotizador RBC</h2>
-        <p>El sistema se ha autenticado con éxito mediante tu cuenta de Google.</p>
+        <p>El sistema se ha autenticado con éxito mediante tu cuenta autorizada de Google.</p>
       </div>
     </>
   );
