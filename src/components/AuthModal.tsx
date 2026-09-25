@@ -82,7 +82,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ onSuccess }) => {
       />
 
       {/* 2. Capa suave de enfoque y contraste para la tarjeta */}
-      <div className="absolute inset-0 bg-slate-950/25 backdrop-blur-[2px] pointer-events-none" />
+      <div className="absolute inset-0 bg-slate-950/10 backdrop-blur-[2px] pointer-events-none" />
 
       {/* 3. Tarjeta de Acceso Flotante */}
       <div className="relative z-20 w-full max-w-md bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-700/60 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
