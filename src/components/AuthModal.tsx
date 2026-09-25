@@ -75,16 +75,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ onSuccess }) => {
 
   return (
     <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-slate-950 p-4">
-      {/* 1. Fondo Oficial Personalizado con imagen en alta resolución */}
+      {/* Fondo Oficial 100% limpio y nítido (cero oscuridad, cero filtros) */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 select-none pointer-events-none"
         style={{ backgroundImage: `url('/auth-bg.png')` }}
       />
 
-      {/* 2. Capa suave de enfoque y contraste para la tarjeta */}
-      <div className="absolute inset-0 bg-slate-950/25 backdrop-blur-[2px] pointer-events-none" />
-
-      {/* 3. Tarjeta de Acceso Flotante */}
+      {/* Tarjeta de Acceso Flotante */}
       <div className="relative z-20 w-full max-w-md bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-700/60 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         {/* Cabecera */}
         <div className="bg-slate-900 p-6 text-center text-white border-b border-slate-800 relative">
