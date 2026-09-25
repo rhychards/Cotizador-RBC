@@ -10,9 +10,6 @@ import {
   UserPlus, 
   LogIn, 
   AlertCircle, 
-  Video, 
-  ShieldCheck, 
-  Radio, 
   Activity 
 } from 'lucide-react';
 
@@ -78,60 +75,16 @@ export const AuthModal: React.FC<AuthModalProps> = ({ onSuccess }) => {
 
   return (
     <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-slate-950 p-4">
-      {/* 1. Mosaico Collage Temático: Streaming, Seguridad Electrónica y Radiofrecuencia */}
-      <div className="absolute inset-0 grid grid-cols-1 md:grid-cols-3 opacity-80 select-none pointer-events-none">
-        {/* Streaming Corporativo de Audio y Video */}
-        <div className="relative h-full overflow-hidden border-r border-slate-700/60">
-          <img 
-            src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=1200&auto=format&fit=crop" 
-            alt="Streaming Corporativo Audiovisual" 
-            className="w-full h-full object-cover contrast-115 brightness-90"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-red-950/40 via-transparent to-slate-900/30" />
-        </div>
+      {/* 1. Fondo Oficial Personalizado con imagen en alta resolución */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 select-none pointer-events-none"
+        style={{ backgroundImage: `url('/auth-bg.png')` }}
+      />
 
-        {/* Seguridad Electrónica y CCTV */}
-        <div className="relative h-full overflow-hidden border-r border-slate-700/60">
-          <img 
-            src="https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=1200&auto=format&fit=crop" 
-            alt="Seguridad Electrónica" 
-            className="w-full h-full object-cover contrast-115 brightness-90"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-900/30 via-transparent to-slate-950/50" />
-        </div>
+      {/* 2. Capa suave de enfoque y contraste para la tarjeta */}
+      <div className="absolute inset-0 bg-slate-950/25 backdrop-blur-[2px] pointer-events-none" />
 
-        {/* Radiofrecuencia y Telecomunicaciones */}
-        <div className="relative h-full overflow-hidden">
-          <img 
-            src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?q=80&w=1200&auto=format&fit=crop" 
-            alt="Radiofrecuencia y Telecomunicaciones" 
-            className="w-full h-full object-cover contrast-115 brightness-90"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b md:bg-gradient-to-l from-cyan-950/40 via-transparent to-slate-900/30" />
-        </div>
-      </div>
-
-      {/* 2. Filtro de balance suave para dar contraste sin tapar el collage */}
-      <div className="absolute inset-0 bg-slate-950/40 pointer-events-none" />
-      <div className="absolute -top-32 -left-32 w-96 h-96 bg-red-600/20 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-cyan-600/20 rounded-full blur-3xl pointer-events-none" />
-
-      {/* 3. Etiquetas de especialidad técnica */}
-      <div className="absolute top-6 left-0 right-0 flex justify-center items-center gap-3 sm:gap-6 text-[11px] font-bold uppercase tracking-wider text-white select-none z-10 px-4 text-center">
-        <span className="flex items-center gap-1.5 bg-slate-900/85 backdrop-blur-md px-3 py-1 rounded-full border border-slate-700 shadow-md">
-          <Video className="w-3.5 h-3.5 text-red-500" /> Streaming Audio & Video
-        </span>
-        <span className="hidden sm:inline text-slate-500">•</span>
-        <span className="flex items-center gap-1.5 bg-slate-900/85 backdrop-blur-md px-3 py-1 rounded-full border border-slate-700 shadow-md">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> Seguridad Electrónica
-        </span>
-        <span className="hidden sm:inline text-slate-500">•</span>
-        <span className="flex items-center gap-1.5 bg-slate-900/85 backdrop-blur-md px-3 py-1 rounded-full border border-slate-700 shadow-md">
-          <Radio className="w-3.5 h-3.5 text-cyan-400" /> Radiofrecuencia
-        </span>
-      </div>
-
-      {/* 4. Tarjeta Principal de Autenticación */}
+      {/* 3. Tarjeta de Acceso Flotante */}
       <div className="relative z-20 w-full max-w-md bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-700/60 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         {/* Cabecera */}
         <div className="bg-slate-900 p-6 text-center text-white border-b border-slate-800 relative">
@@ -249,7 +202,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ onSuccess }) => {
       </div>
 
       {/* Pie de pantalla */}
-      <div className="absolute bottom-4 text-center text-[10px] text-white/90 font-medium drop-shadow-md select-none z-10">
+      <div className="absolute bottom-3 text-center text-[10px] text-slate-400/90 font-medium drop-shadow select-none z-10">
         RB Comunicaciones • Infraestructura Tecnológica & Soluciones Especializadas
       </div>
     </div>
